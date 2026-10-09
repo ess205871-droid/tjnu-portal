@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天津师范大学 - 研究生智慧教育创新中心</title>
+<style>
+@font-face{font-family:'Alibaba PuHuiTi 3.0';src:url('fonts/AlibabaPuHuiTi-3-55-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:'Alibaba PuHuiTi 3.0';src:url('fonts/AlibabaPuHuiTi-3-65-Medium.ttf') format('truetype');font-weight:500;font-display:swap}
+@font-face{font-family:'Alibaba PuHuiTi 3.0';src:url('fonts/AlibabaPuHuiTi-3-85-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#000}
+.scale-wrap{position:relative;width:100%;overflow:hidden}
+.stage{width:1920px;height:1080px;position:absolute;top:0;left:50%;transform-origin:top center;overflow:hidden}
+/* ============ 视频背景 ============ */
+.video-bg{position:absolute;left:-2px;top:-1px;width:1924px;height:1082px;object-fit:cover}
+.mask{position:absolute;left:0;top:0;width:1920px;height:1080px;opacity:.6}
+/* 鼠标柔和微光跟随：径向渐变暖白光影，直径 240px（半径 120px）、中心 20% 渐隐，
+   位于遮罩之上、内容层(z5+)之下；pointer-events 关闭，不影响任何交互 */
+.glow{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:1;pointer-events:none;
+  opacity:0;transition:opacity .4s ease;
+  background:radial-gradient(circle 120px at var(--gx,960px) var(--gy,540px),
+    rgba(255,244,226,.2),rgba(255,244,226,.07) 40%,rgba(255,244,226,0) 70%)}
+/* ============ 头部导航 ============ */
+.header{position:absolute;left:0;top:0;width:1920px;height:116px;z-index:10}
+.nav-bg{position:absolute;left:0;top:0;width:1920px;height:116px}
+.logo{position:absolute;left:160px;top:20px;width:242px;height:56px}
+.nav-links{position:absolute;left:610px;top:27px;display:flex;gap:16px;height:42px}
+.nav-item{position:relative;display:flex;align-items:center;gap:10px;padding:0 16px;height:42px;cursor:pointer}
+.nav-item span{width:130px;text-align:center;font-family:'Alibaba PuHuiTi 3.0';font-weight:400;font-size:22px;color:#fff;line-height:1.4;white-space:nowrap}
+.nav-item:hover span{font-weight:700}
+.nav-item .arrow{position:relative;width:12px;height:12px}
+.nav-item .arrow img{position:absolute;left:0;top:0;width:12px;height:12px;transition:opacity .15s}
+.nav-item .arrow .up{opacity:0}
+.nav-item:hover .arrow .down{opacity:0}
+.nav-item:hover .arrow .up{opacity:1}
+/* 下拉菜单 */
+/* 下拉菜单面板：树 fills=#FFFFFF opacity .8 + BACKGROUND_BLUR r20 + r10 */
+.dropdown{position:absolute;top:42px;left:-2px;background:rgba(255,255,255,.8);border-radius:10px;
+  padding:10px;display:none;flex-direction:column;gap:4px;z-index:50;
+  -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.nav-item:hover .dropdown{display:flex}
+.dd-item{display:flex;align-items:center;height:39px;padding:0 10px;border-radius:10px;
+  font-family:'Alibaba PuHuiTi 3.0';font-weight:400;font-size:18px;color:rgba(0,0,0,.65);letter-spacing:.72px;
+  line-height:1.25;white-space:nowrap;cursor:pointer}
+.dd-item:hover{background:rgba(182,1,8,.06);color:#B60108;font-weight:500}
+.avatar{position:absolute;left:1636px;top:28px;width:124px;height:40px}
+/* ============ 中央内容 ============ */
+.hero-title{position:absolute;left:438px;top:300px;width:1043px;height:286px;z-index:5}
+.btn{position:absolute;top:646px;width:185px;height:52px;z-index:6;cursor:pointer;transition:transform .15s,filter .15s}
+.btn:hover{transform:scale(1.06);filter:brightness(1.15)}
+.btn-bg{position:absolute;left:0;top:0;width:100%;height:100%}
+.btn-text{position:absolute;width:137px;height:18px}
+#btn1{left:764.5px}
+#btn1 .btn-text{left:23.5px;top:17px}
+#btn2{left:969.5px}
+/* 按钮2-背景 49:1156：IMAGE + BACKGROUND_BLUR r40 + 圆角 r100 */
+#btn2 .btn-bg{border-radius:100px;-webkit-backdrop-filter:blur(40px);backdrop-filter:blur(40px)}
+#btn2 .btn-text{left:24px;top:17px}
+/* ============ 底部数据区 ============ */
+.data-area{position:absolute;left:160px;top:800px;width:1600px;height:220px;z-index:7}
+.dcard{position:absolute;cursor:pointer;overflow:hidden;border-radius:20px;
+  transition:transform .4s cubic-bezier(.4,0,.2,1),box-shadow .4s cubic-bezier(.4,0,.2,1)}
+/* 数据卡：树 RECTANGLE 带 BACKGROUND_BLUR r40 + 圆角 r20 */
+.dcard img{position:absolute;left:0;top:0;width:100%;height:100%;transition:opacity .4s ease;border-radius:20px;-webkit-backdrop-filter:blur(40px);backdrop-filter:blur(40px)}
+/* 悬停：轻微上浮 + 柔和阴影（与双图淡切叠加） */
+.dcard:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,.38)}
+.dcard .hover{opacity:0}
+.dcard:hover .hover{opacity:1}
+.dcard:hover .normal{opacity:0}
+/* 数据卡坐标（树值） */
+.d1{left:0;top:0;width:200px;height:104px}
+.d2{left:212px;top:0;width:200px;height:104px}
+.d3{left:424px;top:0;width:378px;height:104px}
+.d4{left:0;top:116px;width:200px;height:104px}
+.d5{left:212px;top:116px;width:200px;height:104px}
+.d6{left:424px;top:116px;width:378px;height:104px}
+/* ============ 搜索区 ============ */
+/* 容器 89:2369：无填充无描边，背景由切图自带 */
+.search{position:absolute;left:862px;top:0;width:738px;height:220px;z-index:7}
+/* 输入框 89:2370：IMAGE + BACKGROUND_BLUR r40 + 圆角 r20 */
+.search-bg{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:20px;-webkit-backdrop-filter:blur(40px);backdrop-filter:blur(40px)}
+.search-bar{position:absolute;left:24px;top:80px;width:690px;height:117px}
+/* 输入框悬停：轻微提亮 + 文本光标（暗示可输入） */
+.search-bar{cursor:text;transition:filter .3s ease}
+.search-bar:hover{filter:brightness(1.06)}
+.teacher{position:absolute;left:1353px;top:-150px;width:230px;height:230px;z-index:8}
+/* 搜索按钮行（树 89:2373，相对 .search） */
+.sbtn{position:absolute;cursor:pointer}
+.sbtn img{position:absolute;left:0;top:0;width:100%;height:100%}
+.sbtn .hover{opacity:0}
+.sbtn:hover .hover{opacity:1}
+.sbtn:hover .normal{opacity:0}
+.sb1{left:40px;top:144px;width:152px;height:37px}
+.sb2{left:204px;top:144px;width:112px;height:37px}
+.sb3{left:328px;top:144px;width:112px;height:37px}
+.up-img{position:absolute;left:574px;top:149px;width:28px;height:28px}
+.up-file{position:absolute;left:614px;top:149px;width:28px;height:28px}
+/* 上传按钮悬停：放大+提亮（与首屏 CTA 一致，无悬停切图） */
+.up-img,.up-file{cursor:pointer;transition:transform .15s,filter .15s}
+.up-img:hover,.up-file:hover{transform:scale(1.1);filter:brightness(1.15)}
+.sb-send{left:662px;top:145px;width:36px;height:36px}
+</style>
+</head>
+<body>
+<div class="scale-wrap" id="scaleWrap">
+  <div class="stage" id="stage">
+    <!-- 视频背景 -->
+    <video class="video-bg" autoplay muted loop playsinline>
+      <source src="assets/视频.mp4" type="video/mp4">
+    </video>
+    <img class="mask" src="assets/遮住.png" alt="">
+    <div class="glow" id="glow" aria-hidden="true"></div>
+
+    <!-- 头部导航 -->
+    <div class="header">
+      <img class="nav-bg" src="assets/导航图片.png" alt="">
+      <img class="logo" src="assets/logo.png" alt="">
+      <div class="nav-links">
+        <div class="nav-item"><span>树人学堂中心</span></div>
+        <div class="nav-item">
+          <span>导师发展中心</span>
+          <span class="arrow"><img class="down" src="assets/下箭头.png" alt=""><img class="up" src="assets/上箭头.png" alt=""></span>
+          <div class="dropdown" style="width:187px">
+            <div class="dd-item">导师线上培训</div>
+            <div class="dd-item">导师考核</div>
+            <div class="dd-item">导师风采展示</div>
+            <div class="dd-item">导学关系建设月</div>
+            <div class="dd-item">导师能力提升计划</div>
+            <div class="dd-item">从游导师教改项目</div>
+            <div class="dd-item">AI工作台</div>
+          </div>
+        </div>
+        <div class="nav-item"><span>产教育人中心</span><span class="arrow"><img class="down" src="assets/下箭头.png" alt=""><img class="up" src="assets/上箭头.png" alt=""></span>
+          <div class="dropdown" style="width:224px">
+            <div class="dd-item">产教融合研究生工作站</div>
+            <div class="dd-item">产业/岗位能力模型</div>
+            <div class="dd-item">专业学位案例库</div>
+            <div class="dd-item">思政示范课</div>
+          </div>
+        </div>
+        <div class="nav-item"><span>科研创新中心</span><span class="arrow"><img class="down" src="assets/下箭头.png" alt=""><img class="up" src="assets/上箭头.png" alt=""></span>
+          <div class="dropdown" style="width:114px">
+            <div class="dd-item">学术追踪</div>
+            <div class="dd-item">知识星链</div>
+            <div class="dd-item">科学探索</div>
+            <div class="dd-item">AI研究员</div>
+          </div>
+        </div>
+        <div class="nav-item"><span>学术活动中心</span><span class="arrow"><img class="down" src="assets/下箭头.png" alt=""><img class="up" src="assets/上箭头.png" alt=""></span>
+          <div class="dropdown" style="width:150px">
+            <div class="dd-item">学术活动月</div>
+            <div class="dd-item">讲座报名</div>
+            <div class="dd-item">其他学术活动</div>
+          </div>
+        </div>
+      </div>
+      <img class="avatar" src="assets/头像.png" alt="">
+    </div>
+
+    <!-- 中央标题 -->
+    <img class="hero-title" src="assets/文字.png" alt="">
+    <div class="btn" id="btn1">
+      <img class="btn-bg" src="assets/按钮1-背景.png" alt="">
+      <img class="btn-text" src="assets/按钮1-文字.png" alt="">
+    </div>
+    <div class="btn" id="btn2">
+      <img class="btn-bg" src="assets/按钮2-背景.png" alt="">
+      <img class="btn-text" src="assets/按钮2-文字.png" alt="">
+    </div>
+
+    <!-- 底部数据区 -->
+    <div class="data-area">
+      <div class="dcard d1"><img class="normal" src="assets/在线精品课程.png" alt=""><img class="hover" src="assets/在线精品课程-悬停.png" alt=""></div>
+      <div class="dcard d2"><img class="normal" src="assets/年度学术活动.png" alt=""><img class="hover" src="assets/年度学术活动-悬停.png" alt=""></div>
+      <div class="dcard d3"><img class="normal" src="assets/今日创新总览.png" alt=""><img class="hover" src="assets/今日创新总览-悬停.png" alt=""></div>
+      <div class="dcard d4"><img class="normal" src="assets/在站研究生.png" alt=""><img class="hover" src="assets/在站研究生-悬停.png" alt=""></div>
+      <div class="dcard d5"><img class="normal" src="assets/研究生导师.png" alt=""><img class="hover" src="assets/研究生导师-悬停.png" alt=""></div>
+      <div class="dcard d6"><img class="normal" src="assets/导师数量.png" alt=""><img class="hover" src="assets/导师数量-悬停.png" alt=""></div>
+
+      <!-- 搜索区 -->
+      <div class="search">
+        <img class="search-bg" src="assets/输入框.png" alt="">
+        <img class="search-bar" src="assets/搜索图片.png" alt="">
+        <div class="sbtn sb1"><img class="normal" src="assets/按钮-DeepSeek-R1.png" alt=""><img class="hover" src="assets/按钮-DeepSeek-R1-悬停.png" alt=""></div>
+        <div class="sbtn sb2"><img class="normal" src="assets/按钮-深度思考.png" alt=""><img class="hover" src="assets/按钮-深度思考-悬停.png" alt=""></div>
+        <div class="sbtn sb3"><img class="normal" src="assets/按钮-问题搜索.png" alt=""><img class="hover" src="assets/按钮-问题搜索-悬停.png" alt=""></div>
+        <img class="up-img" src="assets/上传图片按钮.png" alt="">
+        <img class="up-file" src="assets/上传文件按钮.png" alt="">
+        <div class="sbtn sb-send"><img class="normal" src="assets/发送按钮.png" alt=""><img class="hover" src="assets/发送按钮悬停.png" alt=""></div>
+      </div>
+      <img class="teacher" src="assets/教师形象.png" alt="">
+    </div>
+  </div>
+</div>
+<script>
+var DESIGN_W=1920, DESIGN_H=1080, stage=document.getElementById('stage'), wrap=document.getElementById('scaleWrap');
+function fit(){var s=Math.min(1,innerWidth/DESIGN_W);stage.style.transform='translateX(-50%) scale('+s+')';wrap.style.height=(DESIGN_H*s)+'px';}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+
+/* 鼠标柔和微光跟随：仅精细指针设备 + 未开启 reduced-motion 时启用 */
+(function(){
+  var glow=document.getElementById('glow');
+  var reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var finePointer=window.matchMedia&&matchMedia('(pointer: fine)').matches;
+  if(!glow||reduced||!finePointer)return; /* 触屏/低动态偏好：关闭 */
+  var tx=960,ty=540,      /* 目标坐标（stage 1x 系） */
+      gx=960,gy=540,      /* 当前坐标（平滑跟随） */
+      lastMove=0,         /* 上次移动时间戳 */
+      visible=false;
+  stage.addEventListener('mousemove',function(e){
+    var r=stage.getBoundingClientRect(), s=r.width/DESIGN_W;
+    tx=(e.clientX-r.left)/s; ty=(e.clientY-r.top)/s;
+    lastMove=performance.now();
+    if(!visible){glow.style.opacity='1';visible=true;}
+  });
+  (function loop(){
+    gx+=(tx-gx)*.12; gy+=(ty-gy)*.12;  /* 轻微延迟跟随 */
+    glow.style.setProperty('--gx',gx+'px');
+    glow.style.setProperty('--gy',gy+'px');
+    if(visible&&performance.now()-lastMove>400){glow.style.opacity='0';visible=false;} /* 停止 400ms 后淡出 */
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
+</body>
+</html>
