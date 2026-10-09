@@ -14,7 +14,7 @@ html,body{background:#000}
 .stage{width:1920px;height:1080px;position:absolute;top:0;left:50%;transform-origin:top center;overflow:hidden}
 /* ============ 视频背景 ============ */
 .video-bg{position:absolute;left:-2px;top:-1px;width:1924px;height:1082px;object-fit:cover}
-.mask{position:absolute;left:0;top:0;width:1920px;height:1080px;opacity:.6}
+.mask{position:absolute;left:0;top:0;width:1920px;height:1080px;background:rgba(0,0,0,.1)}
 /* 鼠标柔和微光跟随：径向渐变暖白光影，直径 240px（半径 120px）、中心 20% 渐隐，
    位于遮罩之上、内容层(z5+)之下；pointer-events 关闭，不影响任何交互 */
 .glow{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:1;pointer-events:none;
@@ -109,7 +109,7 @@ html,body{background:#000}
     <video class="video-bg" autoplay muted loop playsinline>
       <source src="assets/视频.mp4" type="video/mp4">
     </video>
-    <img class="mask" src="assets/遮住.png" alt="">
+    <div class="mask"></div>
     <div class="glow" id="glow" aria-hidden="true"></div>
 
     <!-- 头部导航 -->
